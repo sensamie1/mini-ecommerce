@@ -1,0 +1,168 @@
+const UserModel = require('../models/user');
+const ProductModel = require('../models/product');
+const jwt = require('jsonwebtoken');
+const logger = require('../logger');
+
+require('dotenv').config()
+
+const CreateProduct = async (req, res) => {
+  try {
+    logger.info('[CreateProduct] => Create product process started.')
+
+    const productFromRequest = req.body;
+
+    // Access the authenticated (bearerToken) user's ID from req.user._id
+    const userId = req.user._id;
+
+    const existingProduct = await ProductModel.findOne({ 
+      name: productFromRequest.name,
+      user: userId
+    });
+
+    if (existingAnniversary) {
+      return res.status(409).json({
+        message: 'Anniversary already exists',
+      });
+    }
+  
+    // Check if next_date is in the past
+    const currentDate = new Date();
+    const userNextDate = new Date(anniversaryFromRequest.next_date);
+
+    if (userNextDate <= currentDate) {
+      return res.status(400).json({
+        message: 'Next date cannot be today or in the past. Please try again.',
+      });
+    }
+
+    const anniversary = await AnniversaryModel.create({
+      anniversary_name: anniversaryFromRequest.anniversary_name,
+      user: userId, 
+      next_date: anniversaryFromRequest.next_date
+    });
+  
+    logger.info('[CreateAnniversary] => Create anniversary process done.')
+    return res.status(201).json({
+      message: 'Anniversary created successfully. Expect messages on the specified next date and annually.',
+      anniversary
+    }) 
+  } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        message: 'Server Error',
+        data: null
+      })
+  }
+
+}
+
+const CreateOtherAnniversary = async (req, res) => {
+  try {
+    logger.info('[CreateOtherAnniversary] => Create other anniversary process started.')
+
+    const OtherAnniversaryFromRequest = req.body;
+
+    // Access the authenticated (bearerToken) user's ID from req.user._id
+    const userId = req.user._id;
+
+    const existingOtherAnniversary = await OtherAnniversaryModel.findOne({ 
+      anniversary_name: OtherAnniversaryFromRequest.anniversary_name,
+      recipient_email: OtherAnniversaryFromRequest.recipient_email,
+      user: userId
+    });
+
+    if (existingOtherAnniversary) {
+      return res.status(409).json({
+        message: 'Anniversary already exists',
+      });
+    }
+  
+    // Check if next_date is in the past
+    const currentDate = new Date();
+    const userNextDate = new Date(OtherAnniversaryFromRequest.next_date);
+
+    if (userNextDate <= currentDate) {
+      return res.status(400).json({
+        message: 'Next date cannot be today or in the past. Please try again.',
+      });
+    }
+
+    const anniversary = await OtherAnniversaryModel.create({
+      anniversary_name: OtherAnniversaryFromRequest.anniversary_name,
+      recipient_name: OtherAnniversaryFromRequest.recipient_name,
+      recipient_email: OtherAnniversaryFromRequest.recipient_email,
+      user: userId, 
+      next_date: OtherAnniversaryFromRequest.next_date
+    });
+  
+    logger.info('[CreateOtherAnniversary] => Create other anniversary process done.')
+    return res.status(201).json({
+      message: 'Anniversary created successfully. Recipient will get messages on the specified next date and annually.',
+      anniversary
+    }) 
+  } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        message: 'Server Error',
+        data: null
+      })
+  }
+
+}
+
+const UserGetAnniversaries = async (req, res) => {
+  try {
+    logger.info('[UserGetAnniversaries] => Get user anniversaries process started.');
+
+    // Access the authenticated (bearerToken) user's ID from req.user._id
+    const userId = req.user._id;
+
+    const anniversaries = await AnniversaryModel.find({ user: userId });
+
+    logger.info('[UserGetAnniversaries] => Get user anniversaries process done.');
+    return res.status(200).json({
+      message: 'User anniversaries retrieved successfully.',
+      anniversaries
+    });
+  } catch (error) {
+    logger.error(`[UserGetAnniversaries] => Error: ${error.message}`);
+    return res.status(500).json({
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+const UserGetOtherAnniversaries = async (req, res) => {
+  try {
+    logger.info('[UserGetOtherAnniversaries] => User gets other anniversaries process started.');
+
+    // Access the authenticated (bearerToken) user's ID from req.user._id
+    const userId = req.user._id;
+
+    const anniversaries = await OtherAnniversaryModel.find({ user: userId });
+
+    logger.info('[UserGetOtherAnniversaries] => User gets other anniversaries process done.');
+    return res.status(200).json({
+      message: 'Other anniversaries retrieved successfully.',
+      anniversaries
+    });
+  } catch (error) {
+    logger.error(`[UserGetOtherAnniversaries] => Error: ${error.message}`);
+    return res.status(500).json({
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+module.exports = {
+  CreateUser,
+  UserVerifyEmail,
+  UserReVerifyEmail,
+  UserLogin,
+  CreateAnniversary,
+  CreateOtherAnniversary,
+  UserGetAnniversaries,
+  UserGetOtherAnniversaries
+}

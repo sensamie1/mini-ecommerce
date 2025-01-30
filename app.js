@@ -1,9 +1,11 @@
 const express = require('express');
+
+require('dotenv').config()
+
 const sequelize = require('./config/sequelize');
 const apiRoutes = require('./routers/index')
 
 
-require('dotenv').config()
 
 
 const port = process.env.PORT || 4001;
@@ -14,9 +16,35 @@ app.use(express.json()) // body parser
 
 app.use('/api', apiRoutes)
 
-// app.use('/users', usersRouter)
+// home route
+app.get('/', (req, res) => {
+  return res.status(200).json({
+    message: 'Success! Welcome to Mini-Ecommerce App.', 
+    status: true })
+})
 
-// app.use('/products', productsRouter)
+app.get('/api/v1', (req, res) => {
+  return res.status(200).json({
+    message: 'Success! Welcome to Mini-Ecommerce App.', 
+    status: true })
+})
+
+app.get('*', (req, res) => {
+  return res.status(404).json({
+    data: null,
+    error: 'Route not found'
+  })
+})
+
+// global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).json({
+    data: null,
+    error: 'Server Error'
+  })
+})
+
 
 
 //Connect to Database with Sequelize
