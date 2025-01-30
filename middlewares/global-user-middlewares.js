@@ -1,4 +1,5 @@
-const UserModel = require('../models/user');
+const { User } = require('../models');
+// const UserModel = require('../models/user');
 const jwt = require('jsonwebtoken');
 const logger = require('../logger');
 
@@ -37,7 +38,7 @@ const bearerTokenAuth = async (req, res, next) => {
 
   const decoded = await jwt.verify(token, process.env.JWT_SECRET)
 
-  const user = await UserModel.findOne({ _id: decoded._id })
+  const user = await User.findOne({where: { id: decoded.id }})
   
   if (!user) {
     return res.status(401).json({

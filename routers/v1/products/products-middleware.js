@@ -1,7 +1,7 @@
 const Joi = require('joi');
-const logger = require('../logger');
+const logger = require('../../../logger');
 
-const CreateProductValidation = async (req, res, next) => {
+const createProductValidation = async (req, res, next) => {
   try {
     logger.info('[CreateProductValidation] => Create product validation process started...');
 
@@ -28,7 +28,13 @@ const CreateProductValidation = async (req, res, next) => {
           'number.integer': 'Stock quantity must be an integer',
           'number.min': 'Stock quantity cannot be negative',
           'any.required': 'Stock quantity is required'
-        })
+        }),
+        category_id: Joi.number().positive().required()
+        .messages({
+          'number.base': 'Category_id must be a valid number',
+          'number.positive': 'Category_id must be greater than zero',
+          'any.required': 'Category_id is required'
+        }),
     });
 
     await schema.validateAsync(req.body, { abortEarly: false });
@@ -44,6 +50,37 @@ const CreateProductValidation = async (req, res, next) => {
   }
 };
 
+const createCategoryValidation = async (req, res, next) => {
+  try {
+    logger.info('[CreateCategoryValidation] => Create category validation process started...');
+
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(255).required()
+        .messages({
+          'string.empty': 'Category name is required',
+          'string.min': 'Category name must be at least 3 characters long',
+          'string.max': 'Category name cannot exceed 255 characters'
+        }),
+      description: Joi.string().max(500).allow(null, '')
+        .messages({
+          'string.max': 'Description cannot exceed 500 characters'
+        }),
+    });
+
+    await schema.validateAsync(req.body, { abortEarly: false });
+
+    logger.info('[CreateCategoryValidation] => Create category validation process done.');
+    next();
+  } catch (error) {
+    return res.status(422).json({
+      success: false,
+      message: 'Validation error',
+      errors: error.details.map(err => err.message) // Collects all errors
+    });
+  }
+};
+
 module.exports = {
-  CreateProductValidation
+  createProductValidation,
+  createCategoryValidation
 };

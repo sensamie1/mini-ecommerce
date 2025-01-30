@@ -7,9 +7,9 @@ const router = express.Router();
 
 
 // Create User
-router.post('/signup', globalMiddleware.checkBody, middleware.ValidateUserCreation, controller.CreateUser)
+router.post('/signup', globalMiddleware.checkBody, middleware.validateUserCreation, controller.createUser)
 
 // Signin User
-router.post('/login', globalMiddleware.checkBody, middleware.UserLoginValidation, controller.UserLogin)
+router.post('/login', globalMiddleware.checkBody, middleware.userLoginValidation, controller.userLogin)
 
 module.exports = router

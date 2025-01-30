@@ -6,7 +6,7 @@ const logger = require('../logger');
 require('dotenv').config()
 
 //Controller for User Signup
-const CreateUser = async (req, res) => {
+const createUser = async (req, res) => {
   try {
     logger.info('[CreateUser] => Create user process started.')
     const userFromRequest = req.body
@@ -52,7 +52,7 @@ const CreateUser = async (req, res) => {
     //Assign jwt token
     const token = await jwt.sign({
       email: user.email, 
-      _id: user._id, 
+      id: user.id, 
       first_name: user.first_name, 
       last_name: user.last_name}, process.env.JWT_SECRET, { expiresIn: '1h' })
 
@@ -78,7 +78,7 @@ const CreateUser = async (req, res) => {
 }
 
 //Controller for User Login
-const UserLogin = async (req, res) => {
+const userLogin = async (req, res) => {
   try {
     logger.info('[UserLogin] => User login process started')
     const userFromRequest = req.body
@@ -102,14 +102,14 @@ const UserLogin = async (req, res) => {
     //Assign jwt token
     const token = await jwt.sign({
       email: user.email, 
-      _id: user._id, 
+      id: user.id, 
       first_name: user.first_name, 
       last_name: user.last_name}, process.env.JWT_SECRET, { expiresIn: '1h' })
 
     // Remove password from the response
     const userWithoutPassword = user.toJSON();
     delete userWithoutPassword.password;
-    
+
     logger.info('[UserLogin] => User login process done')
     return res.status(200).json({
       message: 'User login successful',
@@ -126,6 +126,6 @@ const UserLogin = async (req, res) => {
 }
 
 module.exports = {
-  CreateUser,
-  UserLogin
+  createUser,
+  userLogin
 }

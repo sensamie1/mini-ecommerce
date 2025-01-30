@@ -2,7 +2,7 @@ const joi = require('joi')
 const logger = require('../../../logger');
 
 
-const ValidateUserCreation = async (req, res, next) => {
+const validateUserCreation = async (req, res, next) => {
   try {
     logger.info('[ValidateUserCreation] => Validate user creation process started...');
     const schema = joi.object({
@@ -30,7 +30,7 @@ const ValidateUserCreation = async (req, res, next) => {
   }
 }
 
-const UserLoginValidation = async (req, res, next) => {
+const userLoginValidation = async (req, res, next) => {
   try {
     logger.info('[UserLoginValidation] => User login validation process started...');
     const schema = joi.object({
@@ -51,6 +51,6 @@ const UserLoginValidation = async (req, res, next) => {
 }
 
 module.exports = {
-  ValidateUserCreation,
-  UserLoginValidation
+  validateUserCreation,
+  userLoginValidation
 }

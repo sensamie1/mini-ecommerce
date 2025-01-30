@@ -1,16 +1,23 @@
 const express = require('express');
 
+const rateLimit = require("express-rate-limit");
+
 require('dotenv').config()
 
 const sequelize = require('./config/sequelize');
 const apiRoutes = require('./routers/index')
 
-
-
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later."
+});
 
 const port = process.env.PORT || 4001;
 
 const app = express()
+
+app.use(limiter);
 
 app.use(express.json()) // body parser
 
@@ -44,8 +51,6 @@ app.use((err, req, res, next) => {
     error: 'Server Error'
   })
 })
-
-
 
 //Connect to Database with Sequelize
 sequelize.authenticate().then(() => {
