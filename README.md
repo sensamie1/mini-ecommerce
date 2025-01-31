@@ -32,7 +32,7 @@ The **Mini E-Commerce Product API** is a RESTful service that provides CRUD oper
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourusername/mini-ecommerce-api.git
+   git clone https://github.com/sensamie1/mini-ecommerce.git
    cd mini-ecommerce-api
    ```
 
@@ -72,8 +72,8 @@ The **Mini E-Commerce Product API** is a RESTful service that provides CRUD oper
 
 #### Authentication
 
-| Method | Endpoint              | Description         |
-| ------ | --------------------- | ------------------- |
+| Method | Endpoint               | Description         |
+| ------ | ---------------------- | ------------------- |
 | POST   | `/api/v1/users/signup` | Register a new user |
 | POST   | `/api/v1/users/login`  | Authenticate a user |
 
