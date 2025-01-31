@@ -12,6 +12,17 @@ const createCategory = async (req, res) => {
 
     const categoryFromRequest = req.body;
 
+    // Access the authenticated (bearerToken) user's ID from req.user._id
+    const userId = req.user.id;
+
+    const admin = await Admin.findOne({where: {id: userId}})
+
+    if (!admin) {
+      return res.status(409).json({
+        message: 'Unauthorized! You are not an admin.',
+      });
+    }
+
     const existingCategory = await Product.findOne({where: { 
       name: categoryFromRequest.name,
     }});
@@ -80,8 +91,9 @@ const createProduct = async (req, res) => {
 
     // Access the authenticated (bearerToken) user's ID from req.user._id
     const userId = req.user.id;
+    console.log(userId)
 
-    const admin = await Admin.findOne({where: {id: userId}})
+    const admin = await Admin.findOne({where: {user_id: userId}})
 
     if (!admin) {
       return res.status(409).json({
@@ -91,7 +103,7 @@ const createProduct = async (req, res) => {
 
     const existingProduct = await Product.findOne({where: { 
       name: productFromRequest.name,
-      admin_id: userId
+      admin_id: admin.id
     }});
 
     if (existingProduct) {
@@ -106,7 +118,7 @@ const createProduct = async (req, res) => {
       description: productFromRequest.description,
       stock_quantity: productFromRequest.stock_quantity,
       category_id: productFromRequest.category_id,
-      admin_id: userId,
+      admin_id: admin.id,
     });
   
     logger.info('[CreateProduct] => Create product process done.')
@@ -204,8 +216,10 @@ const updateProduct = async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByPk(id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    const admin = await Admin.findOne({where: {user_id: userId}})
     
-    if (product.admin_id !== userId) return res.status(401).json({ message: 'Unauthorised! You are not the creator of this Product.' });
+    if (product.admin_id !== admin.id) return res.status(401).json({ message: 'Unauthorised! You are not and admin or the creator of this Product.' });
 
 
     await product.update(req.body);
@@ -226,7 +240,9 @@ const deleteProduct = async (req, res) => {
     const product = await Product.findByPk(id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    if (product.admin_id !== userId) return res.status(401).json({ message: 'Unauthorised! You are not the creator of this Product.' });
+    const admin = await Admin.findOne({where: {user_id: userId}})
+
+    if (product.admin_id !== admin.id) return res.status(401).json({ message: 'Unauthorised! You are not the creator of this Product.' });
 
     await product.destroy();
     logger.info('[DeleteProduct] => Delete product process done.');
