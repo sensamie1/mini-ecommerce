@@ -1,0 +1,234 @@
+openapi: 3.0.0
+info:
+  title: Mini E-Commerce API
+  description: Professional API documentation for the Mini E-Commerce project
+  version: 1.0.0
+  contact:
+    name: Samuel Ezealor
+    email: sen4word@gmail.com
+servers:
+  - url: http://localhost:4001/api/v1
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Laptop"
+        price:
+          type: number
+          format: float
+          example: 999.90
+        description:
+          type: string
+          example: "A high-performance laptop with a powerful processor."
+        stock_quantity:
+          type: integer
+          example: 10
+        category_id:
+          type: integer
+          example: 1
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Electornics"
+        description:
+          type: string
+          example: "Electrical appliances and gadgets."
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/signup:
+    post:
+      summary: User Signup
+      description: Register a new user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                phone_number:
+                  type: string
+                address:
+                  type: string
+                state:
+                  type: string
+                country:
+                  type: string
+                postal_code:
+                  type: string
+              required:
+                - first_name
+                - last_name
+                - email
+                - password
+      responses:
+        "201":
+          description: User created successfully.
+        "409":
+          description: User already exists.
+
+  /auth/login:
+    post:
+      summary: User Login
+      description: Authenticates a user and returns a JWT token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Login successful.
+        "401":
+          description: Invalid credentials.
+
+  /products:
+    get:
+      summary: Get All Products
+      description: Retrieve a list of products with pagination, filtering, and sorting.
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+        - name: search
+          in: query
+          description: Search products by name
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort products by field (e.g., price, name)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of products.
+    post:
+      summary: Create a Product
+      description: Add a new product (Admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "201":
+          description: Product created successfully.
+
+  /products/{id}:
+    get:
+      summary: Get Product by ID
+      description: Retrieve a single product by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product details.
+        "404":
+          description: Product not found.
+    put:
+      summary: Update Product
+      description: Modify an existing product (Admin only).
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Product updated successfully.
+    delete:
+      summary: Delete Product
+      description: Remove a product (Admin only).
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product deleted successfully.
+        "404":
+          description: Product not found.
+
+  /products/categories:
+    get:
+      summary: Get All Categories
+      description: Retrieve a list of all product categories.
+      responses:
+        "200":
+          description: List of categories.
+
+  /products/categories/create:
+    post:
+      summary: Create a Category
+      description: Add a new category (Admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        "201":
+          description: Category created successfully.
