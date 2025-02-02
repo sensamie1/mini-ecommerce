@@ -7,7 +7,8 @@ info:
     name: Samuel Ezealor
     email: sen4word@gmail.com
 servers:
-  - url: http://localhost:4001/api/v1
+  # - url: http://localhost:4001/api/v1
+  - url: https://mini-ecommerce-scello.vercel.app/api/v1
     description: Local Development Server
 
 components:
