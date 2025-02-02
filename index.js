@@ -70,12 +70,27 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect to Database with Sequelize
-sequelize.authenticate().then(() => {
-  console.log('Connected to the db successfully!');
-}).catch((err) => {
-  console.log('Error connecting to db', err);
-});
+// // Connect to Database with Sequelize
+// sequelize.authenticate().then(() => {
+//   console.log('Connected to the db successfully!');
+// }).catch((err) => {
+//   console.log('Error connecting to db', err);
+// });
 
-// Start Server
-app.listen(port, () => console.log(`listening on port: ${port}`));
+// // Start Server
+// app.listen(port, () => console.log(`listening on port: ${port}`));
+
+// **Export app for tests**
+module.exports = app;
+
+// **Only start server if not in test mode**
+if (process.env.NODE_ENV !== 'test') {
+  sequelize.authenticate()
+    .then(() => {
+      console.log('Connected to the db successfully!');
+      app.listen(port, () => console.log(`listening on port: ${port}`));
+    })
+    .catch((err) => {
+      console.error('Error connecting to db', err);
+    });
+}
