@@ -83,7 +83,7 @@ The **Mini E-Commerce Product API** is a RESTful service that provides CRUD oper
 | ------ | ------------------------------------ | ------------------------------------------------- |
 | POST   | `/api/v1/products/categories/create` | Create a new category (Admin)                     |
 | POST   | `/api/v1/products/create`            | Create a new product (Admin)                      |
-| GET    | `/api/v1/products/categories`        | Get all categoris (Pagination, Sorting)           |
+| GET    | `/api/v1/products/categories`        | Get all categories (Pagination, Sorting)           |
 | GET    | `/api/v1/products`                   | Get all products (Pagination, Sorting, Filtering) |
 | GET    | `/api/v1/products/:id`               | Get a single product                              |
 | PUT    | `/api/v1/products/:id`               | Update product (Admin)                            |
@@ -95,6 +95,8 @@ Fetch all products with pagination and sorting:
 
 ```bash
 curl -X GET "http://localhost:4001/api/v1/products?page=1&limit=10&sortBy=price&order=ASC"
+or
+curl -X GET "https://mini-ecommerce-scello.vercel.app/api/v1/products?page=1&limit=10&sortBy=price&order=ASC"
 ```
 
 ### Testing
@@ -111,6 +113,9 @@ The API is documented using **Swagger** or **Postman** collections. Visit:
 
 ```bash
 http://localhost:4001/api-docs
+or
+https://mini-ecommerce-scello.vercel.app/api-docs
+
 ```
 
 ### Contributing
