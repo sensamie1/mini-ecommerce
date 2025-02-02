@@ -5,11 +5,14 @@ const YAML = require('yamljs');
 require('dotenv').config();
 const sequelize = require('./config/sequelize');
 const apiRoutes = require('./routers/index');
+const path = require('path');
 
 const app = express();
 
-// Load Swagger YAML file
-const swaggerDocument = YAML.load('./docs/swagger.yml');
+// // Load Swagger YAML file
+// const swaggerDocument = YAML.load('./docs/swagger.yml');
+const swaggerDocument = YAML.load(path.join(__dirname, 'docs', 'swagger.yml'));
+
 
 // Trust proxy to allow Express to correctly handle 'X-Forwarded-For' headers
 app.set('trust proxy', 1);
