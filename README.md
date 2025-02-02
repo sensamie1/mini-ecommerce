@@ -16,7 +16,7 @@ The **Mini E-Commerce Product API** is a RESTful service that provides CRUD oper
 - **Input Validation & Error Handling**: Ensure data integrity.
 - **API Versioning**: Maintain backward compatibility.
 - **Comprehensive Documentation**: Clear API documentation with usage guidelines.
-- **Unit Testing** (Bonus): Ensures reliability and performance.
+- **Unit Testing**: Ensures reliability and performance.
 
 ### Tech Stack
 
