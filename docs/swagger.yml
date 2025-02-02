@@ -52,7 +52,7 @@ security:
   - BearerAuth: []
 
 paths:
-  /auth/signup:
+  /users/signup:
     post:
       summary: User Signup
       description: Register a new user.
@@ -92,7 +92,7 @@ paths:
         "409":
           description: User already exists.
 
-  /auth/login:
+  /users/login:
     post:
       summary: User Login
       description: Authenticates a user and returns a JWT token.
